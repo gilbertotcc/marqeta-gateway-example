@@ -1,0 +1,58 @@
+plugins {
+  id 'org.springframework.boot' version '2.1.4.RELEASE'
+  id 'java'
+  id 'groovy'
+  id 'maven'
+  id 'jacoco'
+  id 'com.adarshr.test-logger' version '1.6.0'
+  id 'idea'
+  id 'checkstyle'
+}
+
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
+
+apply plugin: 'io.spring.dependency-management'
+
+springBoot {
+  buildInfo()
+}
+
+bootJar {
+  archiveFileName = 'application.jar'
+}
+
+configurations {
+  compileOnly {
+    extendsFrom annotationProcessor
+  }
+}
+
+repositories {
+  mavenCentral()
+  mavenLocal()
+  maven {
+    url "https://dl.bintray.com/gilbertotcc/marqeta"
+  }
+}
+
+dependencies {
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
+  compile 'it.tccr.marqeta.webhooks:marqeta-webhooks-models:0.0.1'
+
+  // TEST
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+  testImplementation 'org.codehaus.groovy:groovy-all:2.5.6'
+  testImplementation 'org.spockframework:spock-core:1.2-groovy-2.5'
+  testAnnotationProcessor 'org.projectlombok:lombok'
+  testCompileOnly 'org.projectlombok:lombok'
+  testImplementation 'org.junit.jupiter:junit-jupiter-api:5.1.1'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.1.1'
+  testCompile 'org.skyscreamer:jsonassert:1.5.0'
+}
+
+// CHECKSTYLE
+checkstyleMain.source = "src/main/java"
+checkstyleTest.source = "src/test/java"
